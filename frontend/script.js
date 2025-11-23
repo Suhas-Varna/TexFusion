@@ -6,6 +6,8 @@ class TexFusion {
     this.setupSliderUpdates();
     this.checkAuthStatus();
     this.setupAnimations();
+    this.setupNavigation();
+    this.setInitialNavigation();
   }
 
   initializeElements() {
@@ -18,6 +20,7 @@ class TexFusion {
     this.mainContent = document.getElementById('mainContent');
     this.userInfo = document.getElementById('userInfo');
     this.welcomeMsg = document.getElementById('welcomeMsg');
+    this.getStartedBtn = document.getElementById('getStartedBtn');
 
     // Form elements
     this.loginForm = document.getElementById('loginForm');
@@ -53,6 +56,12 @@ class TexFusion {
 
     // Loading overlay
     this.loadingOverlay = document.getElementById('loadingOverlay');
+
+    // Navigation elements
+    this.sections = document.querySelectorAll('.section, .tool-section');
+    this.navLinks = document.querySelectorAll('.nav-link');
+    this.featureSelectors = document.querySelectorAll('.feature-selector');
+    this.backButtons = document.querySelectorAll('.btn-back');
   }
 
   setupEventListeners() {
@@ -60,6 +69,7 @@ class TexFusion {
     this.loginBtn?.addEventListener('click', () => this.showModal('login'));
     this.registerBtn?.addEventListener('click', () => this.showModal('register'));
     this.logoutBtn?.addEventListener('click', () => this.logout());
+    this.getStartedBtn?.addEventListener('click', () => {this.showModal('login')});
 
     // Modal close buttons
     document.getElementById('closeLogin')?.addEventListener('click', () => this.hideModal('login'));
@@ -102,15 +112,155 @@ class TexFusion {
       }
     });
 
-    // Social auth buttons
-    document.querySelectorAll('.btn-social').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    // Smooth scrolling for navigation
+    this.setupSmoothScrolling();
+  }
+
+  setupNavigation() {
+    // Initialize navigation elements
+    this.navLinks = document.querySelectorAll('.nav-link');
+    this.featureSelectors = document.querySelectorAll('.feature-selector');
+    this.backButtons = document.querySelectorAll('.btn-back');
+    
+    // Setup all listeners
+    this.setupNavigationListeners();
+  }
+
+  setupNavigationListeners() {
+    // Navigation links
+    this.navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
         e.preventDefault();
-        this.showLoading();
-        setTimeout(() => {
-          this.hideLoading();
-          alert('Social authentication would be implemented here');
-        }, 1500);
+        const section = link.getAttribute('data-section');
+        const linkText = link.textContent.trim();
+        
+        if (section) {
+          // Handle Home and Features navigation
+          this.showSection(section);
+          
+          // Update active state
+          this.navLinks.forEach(nav => nav.classList.remove('active'));
+          link.classList.add('active');
+        } else if (linkText === 'About') {
+          // Handle About link
+          this.showAboutModal();
+        }
+      });
+    });
+
+    // Feature selector buttons
+    this.featureSelectors.forEach(selector => {
+      const button = selector.querySelector('.selector-btn');
+      button.addEventListener('click', () => {
+        const target = selector.getAttribute('data-target');
+        this.showToolSection(target);
+        
+        // Update navigation to show Features as active
+        this.navLinks.forEach(nav => nav.classList.remove('active'));
+        const featuresLink = document.querySelector('[data-section="features"]');
+        if (featuresLink) {
+          featuresLink.classList.add('active');
+        }
+      });
+    });
+
+    // Back buttons
+    this.backButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        this.showSection('features');
+        
+        // Update navigation active state
+        this.navLinks.forEach(nav => nav.classList.remove('active'));
+        const featuresLink = document.querySelector('[data-section="features"]');
+        if (featuresLink) {
+          featuresLink.classList.add('active');
+        }
+      });
+    });
+  }
+
+  setInitialNavigation() {
+    const user = localStorage.getItem('texfusion_user');
+    if (user) {
+      this.updateNavigationForLoggedIn();
+    } else {
+      this.updateNavigationForNonLoggedIn();
+    }
+  }
+
+  updateNavigationForLoggedIn() {
+    const mainNav = document.querySelector('.main-nav');
+    if (!mainNav) return;
+    
+    mainNav.innerHTML = `
+      <a href="#" class="nav-link" data-section="home">Home</a>
+      <a href="#" class="nav-link active" data-section="features">Features</a>
+      <a href="#" class="nav-link">About</a>
+    `;
+    
+    // Update the navLinks property and re-attach event listeners
+    this.navLinks = document.querySelectorAll('.nav-link');
+    this.setupNavigationListeners();
+  }
+
+  updateNavigationForNonLoggedIn() {
+    const mainNav = document.querySelector('.main-nav');
+    if (!mainNav) return;
+    
+    mainNav.innerHTML = `
+      <a href="#" class="nav-link active" data-section="home">Home</a>
+      <a href="#" class="nav-link">About</a>
+    `;
+    
+    // Update the navLinks property and re-attach event listeners
+    this.navLinks = document.querySelectorAll('.nav-link');
+    this.setupNavigationListeners();
+  }
+
+  showSection(sectionName) {
+    // Hide all sections
+    this.sections.forEach(section => {
+      section.classList.remove('active');
+    });
+
+    // Show target section
+    const targetSection = document.getElementById(sectionName + 'Section') || 
+                         document.getElementById(sectionName + 'Tool');
+    if (targetSection) {
+      targetSection.classList.add('active');
+      
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  showToolSection(toolName) {
+    // Hide all sections
+    this.sections.forEach(section => {
+      section.classList.remove('active');
+    });
+
+    // Show tool section
+    const toolSection = document.getElementById(toolName + 'Tool');
+    if (toolSection) {
+      toolSection.classList.add('active');
+      
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  setupSmoothScrolling() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
       });
     });
   }
@@ -136,29 +286,87 @@ class TexFusion {
         // Update on change
         sliderElement.addEventListener('input', () => {
           valueElement.textContent = sliderElement.value;
+          this.addRippleEffect(sliderElement);
         });
       }
     });
+  }
+
+  addRippleEffect(element) {
+    const ripple = document.createElement('div');
+    ripple.style.cssText = `
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(124, 58, 237, 0.3);
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      pointer-events: none;
+    `;
+    
+    const rect = element.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = rect.width / 2;
+    const y = rect.height / 2;
+    
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (x - size / 2) + 'px';
+    ripple.style.top = (y - size / 2) + 'px';
+    
+    element.style.position = 'relative';
+    element.appendChild(ripple);
+    
+    setTimeout(() => {
+      ripple.remove();
+    }, 600);
   }
 
   setupAnimations() {
     // Initialize scroll animations
     this.setupScrollAnimations();
     
-    // Add hover effects to cards
-    document.querySelectorAll('.feature-card').forEach(card => {
-      card.addEventListener('mouseenter', () => {
-        card.style.transform = 'translateY(-8px)';
-      });
-      
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'translateY(0)';
-      });
+    // Add hover effects to cards and buttons
+    document.querySelectorAll('.feature-card, .btn, .feature-selector').forEach(element => {
+      element.addEventListener('mouseenter', this.handleHoverEnter);
+      element.addEventListener('mouseleave', this.handleHoverLeave);
+    });
+
+    // Add ripple effect to buttons
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('click', this.createRipple);
     });
   }
 
+  handleHoverEnter(e) {
+    e.currentTarget.style.transform = e.currentTarget.classList.contains('feature-card') || 
+                                     e.currentTarget.classList.contains('feature-selector')
+      ? 'translateY(-8px)' 
+      : 'translateY(-2px)';
+  }
+
+  handleHoverLeave(e) {
+    e.currentTarget.style.transform = 'translateY(0)';
+  }
+
+  createRipple(e) {
+    const btn = e.currentTarget;
+    const circle = document.createElement('span');
+    const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = diameter + 'px';
+    circle.style.left = e.clientX - btn.getBoundingClientRect().left - radius + 'px';
+    circle.style.top = e.clientY - btn.getBoundingClientRect().top - radius + 'px';
+    circle.classList.add('ripple');
+
+    const ripple = btn.getElementsByClassName('ripple')[0];
+    if (ripple) {
+      ripple.remove();
+    }
+
+    btn.appendChild(circle);
+  }
+
   setupScrollAnimations() {
-    // Simple scroll animation implementation
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
@@ -168,11 +376,18 @@ class TexFusion {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('aos-animate');
+          
+          const children = entry.target.querySelectorAll('[data-aos-delay]');
+          children.forEach((child, index) => {
+            const delay = child.getAttribute('data-aos-delay') || index * 100;
+            setTimeout(() => {
+              child.classList.add('aos-animate');
+            }, delay);
+          });
         }
       });
     }, observerOptions);
 
-    // Observe all elements with data-aos attribute
     document.querySelectorAll('[data-aos]').forEach(el => {
       observer.observe(el);
     });
@@ -219,6 +434,11 @@ class TexFusion {
         <p><strong>${file.name}</strong></p>
         <span class="upload-hint">Ready for processing</span>
       `;
+      
+      uploadArea.style.animation = 'pulse 0.5s ease';
+      setTimeout(() => {
+        uploadArea.style.animation = '';
+      }, 500);
     }
   }
 
@@ -262,7 +482,6 @@ class TexFusion {
     this.showLoading();
 
     try {
-      // Replace with your actual API endpoint
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -301,6 +520,14 @@ class TexFusion {
     const password = document.getElementById('registerPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
 
+    const validDomains = ['gmail.com', 'email.com', 'yahoo.com', 'outlook.com', 'hotmail.com'];
+  const emailDomain = email.split('@')[1];
+  
+  if (!validDomains.includes(emailDomain)) {
+    this.showNotification('Please use a valid email domain (gmail.com, email.com, etc.)', 'error');
+    return;
+  }
+
     if (!username || !email || !password || !confirmPassword) {
       this.showNotification('Please fill in all fields', 'error');
       return;
@@ -314,7 +541,6 @@ class TexFusion {
     this.showLoading();
 
     try {
-      // Replace with your actual API endpoint
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
@@ -333,7 +559,6 @@ class TexFusion {
       }
     } catch (error) {
       console.error('Registration error:', error);
-      // For demo purposes, simulate successful registration
       this.showNotification('Demo: Registration successful! Please login.', 'success');
       this.hideModal('register');
       this.showModal('login');
@@ -359,18 +584,37 @@ class TexFusion {
   }
 
   showAuthenticatedState(username) {
-    this.loginBtn.style.display = 'none';
-    this.registerBtn.style.display = 'none';
-    this.userInfo.style.display = 'flex';
-    this.welcomeMsg.textContent = `Welcome, ${username}!`;
-    this.mainContent.style.display = 'block';
+  this.loginBtn.style.display = 'none';
+  this.registerBtn.style.display = 'none';
+  this.userInfo.style.display = 'flex';
+  this.welcomeMsg.textContent = `Welcome, ${username}!`;
+  this.mainContent.style.display = 'block';
+  
+  // Update navigation for logged in users
+  this.updateNavigationForLoggedIn();
+  
+  // Show home section after login and update active state
+  this.showSection('home');
+  
+  // Force update active state to Home
+  this.navLinks.forEach(nav => nav.classList.remove('active'));
+  const homeLink = document.querySelector('[data-section="home"]');
+  if (homeLink) {
+    homeLink.classList.add('active');
   }
+}
 
   showUnauthenticatedState() {
     this.loginBtn.style.display = 'inline-flex';
     this.registerBtn.style.display = 'inline-flex';
     this.userInfo.style.display = 'none';
-    this.mainContent.style.display = 'none';
+    this.mainContent.style.display = 'block';
+    
+    // Update navigation for non-logged in users
+    this.updateNavigationForNonLoggedIn();
+    
+    // Show home section when not logged in
+    this.showSection('home');
   }
 
   async handleQualityInspection() {
@@ -387,7 +631,6 @@ class TexFusion {
       const formData = new FormData();
       formData.append('image', file);
 
-      // Replace with your actual API endpoint
       const response = await fetch('http://localhost:5001/api/quality-inspection', {
         method: 'POST',
         headers: {
@@ -516,15 +759,12 @@ class TexFusion {
   }
 
   displayQualityResults(result) {
-    // Show uploaded image preview
     this.qualityPreview.src = URL.createObjectURL(this.qualityFile.files[0]);
     this.qualityPreview.style.display = 'block';
     
-    // Update prediction and confidence
     this.qualityPrediction.textContent = result.prediction;
     this.qualityConfidence.textContent = result.confidence;
     
-    // Update top 3 predictions
     const predictionsList = this.qualityTop3.querySelector('.predictions-list');
     if (result.top3 && predictionsList) {
       predictionsList.innerHTML = '';
@@ -538,28 +778,41 @@ class TexFusion {
         predictionsList.appendChild(predictionItem);
       });
     }
+    
+    this.animateResults(this.qualityResult);
   }
 
   displayDesignImage(imageUrl) {
-    // Hide placeholder
     this.designPlaceholder.style.display = 'none';
     
-    // Update image
     this.generatedImage.src = imageUrl;
     this.generatedImage.style.display = 'block';
     
-    // Show download button
     this.downloadBtn.style.display = 'block';
+    
+    this.animateResults(this.designResult);
   }
 
   displayPatternResults(result) {
-    // Show preview
     this.patternPreview.src = URL.createObjectURL(this.patternFile.files[0]);
     this.patternPreview.style.display = 'block';
     
-    // Show results
     this.patternName.textContent = result.pattern;
     this.patternConfidence.textContent = result.confidence;
+    
+    this.animateResults(this.patternResult);
+  }
+
+  animateResults(resultArea) {
+    resultArea.style.animation = 'pulse 0.5s ease';
+    setTimeout(() => {
+      resultArea.style.animation = '';
+    }, 500);
+    
+    const resultItems = resultArea.querySelectorAll('.result-item, .prediction-item');
+    resultItems.forEach((item, index) => {
+      item.style.animation = `slideInLeft 0.5s ease ${index * 0.1}s both`;
+    });
   }
 
   downloadDesign() {
@@ -579,13 +832,11 @@ class TexFusion {
   }
 
   showNotification(message, type = 'info') {
-    // Remove existing notification
     const existingNotification = document.querySelector('.notification');
     if (existingNotification) {
       existingNotification.remove();
     }
 
-    // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.innerHTML = `
@@ -598,7 +849,6 @@ class TexFusion {
       </button>
     `;
 
-    // Add styles
     notification.style.cssText = `
       position: fixed;
       top: 20px;
@@ -616,14 +866,12 @@ class TexFusion {
       max-width: 400px;
     `;
 
-    // Add close button functionality
     const closeBtn = notification.querySelector('.notification-close');
     closeBtn.addEventListener('click', () => {
       notification.style.animation = 'slideOutRight 0.3s ease';
       setTimeout(() => notification.remove(), 300);
     });
 
-    // Auto remove after 5 seconds
     setTimeout(() => {
       if (notification.parentNode) {
         notification.style.animation = 'slideOutRight 0.3s ease';
@@ -633,7 +881,6 @@ class TexFusion {
 
     document.body.appendChild(notification);
 
-    // Add CSS animations
     if (!document.querySelector('#notification-styles')) {
       const style = document.createElement('style');
       style.id = 'notification-styles';
@@ -658,6 +905,22 @@ class TexFusion {
             opacity: 0;
           }
         }
+        @keyframes slideInLeft {
+          from {
+            transform: translateX(-20px);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        @keyframes ripple {
+          to {
+            transform: scale(4);
+            opacity: 0;
+          }
+        }
         .notification-content {
           display: flex;
           align-items: center;
@@ -675,6 +938,14 @@ class TexFusion {
         }
         .notification-close:hover {
           background: rgba(255, 255, 255, 0.2);
+        }
+        .ripple {
+          position: absolute;
+          border-radius: 50%;
+          background-color: rgba(255, 255, 255, 0.7);
+          transform: scale(0);
+          animation: ripple 0.6s linear;
+          pointer-events: none;
         }
       `;
       document.head.appendChild(style);
@@ -699,6 +970,118 @@ class TexFusion {
       info: '#3b82f6'
     };
     return colors[type] || '#3b82f6';
+  }
+
+  showAboutModal() {
+    // Create modal backdrop
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    `;
+
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.className = 'about-modal';
+    modalContent.style.cssText = `
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px;
+      border-radius: 20px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+      animation: modalSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    `;
+
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+    closeBtn.style.cssText = `
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+    `;
+    closeBtn.onmouseenter = () => closeBtn.style.background = 'rgba(255, 255, 255, 0.3)';
+    closeBtn.onmouseleave = () => closeBtn.style.background = 'rgba(255, 255, 255, 0.2)';
+    closeBtn.onclick = () => document.body.removeChild(backdrop);
+
+    // About content
+    // About content - REPLACE ONLY THIS PART
+const aboutContent = `
+  <div style="text-align: center;">
+    <div style="font-size: 3rem; margin-bottom: 20px; color: #f0abfc;">
+      <i class="fas fa-palette"></i>
+    </div>
+    <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 20px; font-weight: 600; color: #f0abfc;">
+      About TexFusion
+    </h2>
+    <div class="about-text-enhanced">
+      <p>
+        <strong>TexFusion</strong> represents the cutting edge of textile innovation, 
+        where artificial intelligence meets creative design. Our platform harnesses 
+        the power of advanced machine learning to revolutionize the textile industry.
+      </p>
+      
+      <p>
+        We provide intelligent solutions for <strong>quality inspection</strong>, 
+        <strong>pattern generation</strong>, and <strong>design recognition</strong>, 
+        empowering designers to create exceptional textiles with unprecedented 
+        efficiency and precision.
+      </p>
+
+      <p>
+        Our mission is to bridge traditional textile craftsmanship with modern 
+        technology, creating a perfect fusion of artistry and algorithmic precision.
+      </p>
+
+      <div class="about-quote-box">
+        <p>
+          "Transforming textiles through intelligent design - where every thread 
+          tells a story of innovation and every pattern reflects the future of 
+          fashion technology."
+        </p>
+      </div>
+    </div>
+  </div>
+`;
+
+    modalContent.innerHTML = aboutContent;
+    modalContent.appendChild(closeBtn);
+    backdrop.appendChild(modalContent);
+    
+    // Add to page
+    document.body.appendChild(backdrop);
+
+    // Close on backdrop click
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) {
+        document.body.removeChild(backdrop);
+      }
+    });
   }
 }
 
