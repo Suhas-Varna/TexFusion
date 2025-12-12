@@ -397,7 +397,7 @@ TexFusion/
   </a>
 </p>
 
-<h3> Pradeep P T </h3>
+<h3> Seeripi Ganesh Kumar  </h3>
 <p align="left">
   <a href="" style="text-decoration: none;" target="_blank">
     <img src="https://img.shields.io/badge/GitHub-black?style=flat&logo=github" alt="GitHub" />
@@ -407,7 +407,7 @@ TexFusion/
   </a>
 </p>
 
-<h3> Prajwal P </h3>
+<h3> Vikas D H </h3>
 <p align="left">
   <a href="" style="text-decoration: none;" target="_blank">
     <img src="https://img.shields.io/badge/GitHub-black?style=flat&logo=github" alt="GitHub" />
@@ -417,7 +417,7 @@ TexFusion/
   </a>
 </p>
 
-<h3> Pranav Anantha Rao </h3>
+<h3> Sanjay J </h3>
 <p align="left">
   <a href="" style="text-decoration: none;" target="_blank">
     <img src="https://img.shields.io/badge/GitHub-black?style=flat&logo=github" alt="GitHub" />
