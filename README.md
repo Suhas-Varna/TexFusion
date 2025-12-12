@@ -154,10 +154,6 @@ venv\Scripts\activate
 source venv/bin/activate</code></pre>
     </li>
     <li>
-      <p><strong>Install Required Dependencies</strong>:</p>
-      <pre><code>pip install -r requirements.txt</code></pre>
-    </li>
-    <li>
       <p><strong>Start the Flask Backend Server</strong>:</p>
       <pre><code>python app.py</code></pre>
       <p>The backend will run at: <code>http://127.0.0.1:5000/</code></p>
@@ -308,6 +304,7 @@ TexFusion/
 │
 └── README.md
 </pre>
+<p>Note: Due to large file sizes, the trained model files are excluded from this repository. Please contact us via email to obtain access to the models.</p>
 
   <h3>🔐 TexFusion Security Architecture</h3>
 <ul>
@@ -427,3 +424,5 @@ TexFusion/
   </a>
 </p>
 </section>
+
+
