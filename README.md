@@ -352,7 +352,6 @@ TexFusion/
   </li>
 </ul>
 </section>
-<img width="569" height="700" alt="quality_result" src="https://github.com/user-attachments/assets/2f63bcbd-b6a0-4285-85bd-4ed405a0b681" />
 
 <section id="screenshots">
   <h2 id="screenshots">App Demonstration</h2>  
