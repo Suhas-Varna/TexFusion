@@ -352,25 +352,19 @@ TexFusion/
   </li>
 </ul>
 </section>
+<img width="569" height="700" alt="quality_result" src="https://github.com/user-attachments/assets/2f63bcbd-b6a0-4285-85bd-4ed405a0b681" />
 
-<!-- <section id="screenshots">
-  <h2 id="screenshots">App Demonstration</h2>
-  <button> <a href="https://drive.google.com/file/d/1n1-7fQX8kG-AyN3iRzpJ3jv9V25sCGOn/view?usp=sharing" target="_blank">Clear here to watch</button></a>  
+<section id="screenshots">
+  <h2 id="screenshots">App Demonstration</h2>  
   <h2> Screenshots </h2>   
-  <img src="https://github.com/user-attachments/assets/d6bd2d65-d428-42fb-85ec-74c09cb683cf" style="width: 200px;" />
-  <img src="https://github.com/user-attachments/assets/8e57886b-b97d-4e0f-a5b2-5b706a504648" style="width: 200px;" />
-  <img src="https://github.com/user-attachments/assets/4cc12fba-0970-4075-8817-d9f5fc1175b7" style="width: 200px;" />
-  <img src="https://github.com/user-attachments/assets/12ef30fb-c8ef-4002-8895-a6eb8a92c82f" style="width: 200px;" />
-  <img src="https://github.com/user-attachments/assets/a5a7a83d-a530-4dac-9f4e-15809d40e187" style="width: 200px;" />
-  <img src="https://github.com/user-attachments/assets/69b02efd-b210-4333-83a1-d4d3573adf2c" style="width: 200px;" />
-  <img src="https://github.com/user-attachments/assets/c779e588-933b-418c-b02c-43b988e50107" style="width: 200px;" />
-  <img src="https://github.com/user-attachments/assets/92a35f92-bd16-4df0-871a-c51502b645d7" style="width: 200px;" />
-  <img src="https://github.com/user-attachments/assets/140f5198-8a1d-4201-9961-c4885a6aa90d" style="width: 200px;" />
-  <img src="https://github.com/user-attachments/assets/8b9f325c-ff8b-4510-ae0b-c485cac584eb" style="width: 200px;" />
-  <img src="https://github.com/user-attachments/assets/af308e05-06b2-4ca0-8291-d7338f82a54f" style="width: 200px;" />
-  <img src="https://github.com/user-attachments/assets/cfe636ad-b298-44c7-bf60-4c681b1a532b" style="width: 200px;" />
-  <img src="https://github.com/user-attachments/assets/f9c92b41-cf4b-4343-a97b-80551fbb6997" style="width: 200px;" />
-</section> -->
+  <img src="https://github.com/user-attachments/assets/f126d77e-7b86-4fbc-8ed7-fff08ea57b81" style="width: 200px;" />
+  <img src="https://github.com/user-attachments/assets/26330225-bca8-4620-a36b-43a3146fc6d2" style="width: 200px;" />
+  <img src="https://github.com/user-attachments/assets/6c3e8607-2217-4f36-a252-067829d6eb84" style="width: 200px;" />
+  <img src="https://github.com/user-attachments/assets/0773e21f-215a-40f2-8eed-22c82699927f" style="width: 200px;" />
+  <img src="https://github.com/user-attachments/assets/18c8aa61-9c29-48f1-894e-b3f735d0823f" style="width: 200px;" />
+  <img src="https://github.com/user-attachments/assets/399e6604-801d-44f1-bb05-4c14cb206109" style="width: 200px;" />
+  <img src="https://github.com/user-attachments/assets/2f63bcbd-b6a0-4285-85bd-4ed405a0b681" style="width: 200px;" />
+</section>
 
 
 <section id="conclusion">
